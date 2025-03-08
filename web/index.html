@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="module">
+    import wslocal from './utils/wslocal.js'
+    import chatUtil from './utils/chatUtil.js'
+    import { createApp } from 'vue'
+    import App from './components/app.js'
+
+    createApp(App).mount('#app')
+
+    window.addEventListener('load', () => {
+      wslocal.on('chat', ({ event, user }) => {
+        // チャットがポストされた時
+        console.log(event, user)
+        const 生メッセージ = event.message.text
+        const テキストのみ = chatUtil.toSimpleText(event.message) // 文中のスタンプを取り除いた文字列
+        const ユーザーログイン名 = user.login
+        const ユーザー表示名 = user.display_name
+        const ユーザープロフィールアイコン = user.profile_image_url
+
+        console.log(
+          生メッセージ,
+          テキストのみ,
+          ユーザーログイン名,
+          ユーザー表示名,
+          ユーザープロフィールアイコン,
+        )
+
+        if (生メッセージ == '!wolf') {
+          wslocal.postChat('俺は戦場の狼だ')
+        }
+      })
+      wslocal.on('channel-points', ({ event, user }) => {
+        // チャネポが使われた時
+        const チャネポの名前 = event.reward.title
+        const チャネポに入力したテキスト = event.user_input
+        const ユーザーログイン名 = user.login
+        const ユーザー表示名 = user.display_name
+        const ユーザープロフィールアイコン = user.profile_image_url
+
+        console.log(
+          チャネポの名前,
+          チャネポに入力したテキスト,
+          ユーザーログイン名,
+          ユーザー表示名,
+          ユーザープロフィールアイコン,
+        )
+      })
+      wslocal.on('subscribe', ({ event, user }) => {
+        // サブスクされた時
+        const ユーザーログイン名 = user.login
+        const ユーザー表示名 = user.display_name
+        const ユーザープロフィールアイコン = user.profile_image_url
+
+        console.log(
+          ユーザーログイン名,
+          ユーザー表示名,
+          ユーザープロフィールアイコン,
+        )
+      })
+      wslocal.on('bits', ({ event, user }) => {
+        // ビッツが使われた時
+        const ユーザーログイン名 = user.login
+        const ユーザー表示名 = user.display_name
+        const ユーザープロフィールアイコン = user.profile_image_url
+
+        console.log(
+          ユーザーログイン名,
+          ユーザー表示名,
+          ユーザープロフィールアイコン,
+        )
+      })
+      wslocal.on('raid', ({ event, user }) => {
+        // レイドを受けた時
+        const ユーザーログイン名 = user.login
+        const ユーザー表示名 = user.display_name
+        const ユーザープロフィールアイコン = user.profile_image_url
+        
+        console.log(
+          ユーザーログイン名,
+          ユーザー表示名,
+          ユーザープロフィールアイコン,
+        )
+      })
+    })
+  </script>
+</body>
+</html>

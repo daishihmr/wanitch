@@ -4,7 +4,7 @@
   <meta charset="utf-8">
 </head>
 <body>
-<input type="text" id="client_id" placeholder="client_id" />
+CLIENT ID: <input type="text" id="client_id" placeholder="client_id" />
 <div class="btn" onclick="auth()">ここを押す</div>
 <style>
 .btn {
@@ -18,6 +18,7 @@
   align-items: center;
   color: rgb(21, 59, 94);
   font-size: 50px;
+  margin: 60px 0;
 }
 </style>
 <script>
@@ -29,7 +30,10 @@ window.onload = () => {
 }
 const auth = () => {
   const client_id = document.querySelector('#client_id').value;
-  if (!client_id) return;
+  if (!client_id) {
+    location.href = 'https://dev.twitch.tv/console'
+    return;
+  }
 
   localStorage.setItem('client_id', client_id);
   const us = [
@@ -40,12 +44,17 @@ const auth = () => {
     `&state=wanitch`,
   ]
   const scopes = [
-    `bits:read`,
-    `channel:read:subscriptions`,
-    `channel:read:redemptions`,
-    `chat:read`,
-    `chat:edit`,
-    `user:manage:whispers`,
+    'bits:read',
+    'channel:read:subscriptions',
+    'channel:read:redemptions',
+    'chat:read',
+    'chat:edit',
+    'user:manage:whispers',
+    'user:write:chat',
+    'user:read:chat',
+    'user:bot',
+    'channel:bot',
+    'moderator:read:followers',
   ]
   const url = us.join('') + "&scope=" + scopes.map(encodeURIComponent).join("+")
   location.href = url

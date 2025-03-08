@@ -4,7 +4,7 @@
   <meta charset="utf-8">
 </head>
 <body>
-  <input id="t" style="width:500px">
+  OAUTH_TOKEN: <input id="t" style="width:500px">
 <script>
 const token = location.hash.substring(1).split('&').map(_ => _.split('=')).find(_ => _[0] == 'access_token')[1];
 document.querySelector('#t').value = token;
