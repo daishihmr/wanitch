@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+<input type="text" id="client_id" placeholder="client_id" />
+<div class="btn" onclick="auth()">ここを押す</div>
+<style>
+.btn {
+  cursor: pointer;
+  width: 300px;
+  height: 120px;
+  background: #c2dded;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(21, 59, 94);
+  font-size: 50px;
+}
+</style>
+<script>
+window.onload = () => {
+  const saved = localStorage.getItem('client_id');
+  if (saved) {
+    document.querySelector('#client_id').value = saved;
+  }
+}
+const auth = () => {
+  const client_id = document.querySelector('#client_id').value;
+  if (!client_id) return;
+
+  localStorage.setItem('client_id', client_id);
+  const us = [
+    `https://id.twitch.tv/oauth2/authorize`,
+    `?response_type=token`,
+    `&client_id=${client_id}`,
+    `&redirect_uri=https://game.dev7.jp/wanitch/callback.html`,
+    `&state=wanitch`,
+  ]
+  const scopes = [
+    `bits:read`,
+    `channel:read:subscriptions`,
+    `channel:read:redemptions`,
+    `chat:read`,
+    `chat:edit`,
+    `user:manage:whispers`,
+  ]
+  const url = us.join('') + "&scope=" + scopes.map(encodeURIComponent).join("+")
+  location.href = url
+};
+</script>
+</body>
+</html>
