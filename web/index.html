@@ -16,17 +16,16 @@
   <div id="app"></div>
 
   <script type="module">
+    import { createApp } from 'vue'
+    import App from './app.js'
     import wslocal from './utils/wslocal.js'
     import chatUtil from './utils/chatUtil.js'
-    import { createApp } from 'vue'
-    import App from './components/app.js'
 
     createApp(App).mount('#app')
 
     window.addEventListener('load', () => {
       wslocal.on('chat', ({ event, user }) => {
         // チャットがポストされた時
-        console.log(event, user)
         const 生メッセージ = event.message.text
         const テキストのみ = chatUtil.toSimpleText(event.message) // 文中のスタンプを取り除いた文字列
         const ユーザーログイン名 = user.login

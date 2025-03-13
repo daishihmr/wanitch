@@ -1,5 +1,4 @@
-import { ref } from 'vue'
-import TwitchClip from './twitch-clip.js'
+import TwitchClip from './components/twitch-clip.js'
 
 export default {
   components: {

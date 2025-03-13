@@ -5,6 +5,7 @@ const WebSocketServer = require('websocket').server
 const WebSocket = require('websocket').client
 
 const api = require('./api')
+const Command = require('./command')
 const { getUser } = require('./getUser')
 
 const setup = async () => {
@@ -69,12 +70,8 @@ const setupWebsocketServer = (webServer, myId) => new Promise((resolve) => {
     conn.on('message', async (message) => {
       console.log('conn on message', message)
       const json = JSON.parse(message.utf8Data)
-      if (json.command == 'postchat') {
-        await api.post(`https://api.twitch.tv/helix/chat/messages`, JSON.stringify({
-          broadcaster_id: myId,
-          sender_id: myId,
-          message: json.data.text,
-        }))
+      if (json.command) {
+        await Command.process(json.command, json.data)
       }
     })
     conn.on('close', () => {
