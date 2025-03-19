@@ -84,7 +84,6 @@ export default {
       } else {
         if (!text.startsWith('-')) {
           if (user.login != 'daishihmr' && user.login != 'daishihmr_bot') {
-            effect.playSound('./resources/pixta_65456670.mp3')
             effect.showComment(event)
           }
 

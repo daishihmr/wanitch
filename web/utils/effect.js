@@ -125,6 +125,7 @@ export default {
     es.forEach(e => this.emotes.add(e))
   },
   showComment (event) {
+    this.playSound('./resources/pixta_65456670.mp3')
     this.comments.addMessage(event)
   },
 }
