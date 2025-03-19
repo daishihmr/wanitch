@@ -1,9 +1,68 @@
 body {
   margin: 0;
+  overflow: hidden;
 }
 
 .app {
   width: 1920px;
   height: 1080px;
-  background-color: #ccc;
+  overflow: hidden;
+  background-color: #999;
+}
+
+.twitch-clip {
+  position: relative;
+  background-color: black;
+  width: 800px;
+  height: 450px;
+  padding: 0;
+  border: none;
+  left: calc(100% - 800px - 80px);
+  top: calc(50% - 450px / 2);
+  transform: perspective(800px) rotateY(-20deg);
+}
+
+.comment {
+  position: absolute;
+  font-size: 48px;
+  font-weight: 800;
+  -webkit-text-stroke: 2px white;
+  text-stroke: 2px white;
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  align-items: center;
+  opacity: 0.75;
+}
+
+.comment-image {
+  vertical-align: middle;
+  display: block;
+  width: 56px;
+  height: 56px;
+}
+
+.wani {
+  position: absolute;
+}
+.wani-name {
+  text-align: center;
+  font-size: 48px;
+  font-weight: 800;
+  color: 'black';
+  -webkit-text-stroke: 2px white;
+  text-stroke: 2px white;
+}
+.wani-image {
+  width: 800px;
+  height: 800px;
+}
+
+.emote {
+
+}
+.emote-image {
+  position: absolute;
+  width: 200px;
+  height: 200px;
 }

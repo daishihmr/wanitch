@@ -3,24 +3,127 @@ const fs = require('fs')
 const mime = require('mime-types')
 const WebSocketServer = require('websocket').server
 const WebSocket = require('websocket').client
+const qs = require('fast-querystring')
 
 const api = require('./api')
-const Command = require('./command')
+const Service = require('./service')
 const { getUser } = require('./getUser')
 
 const setup = async () => {
   const me = await getUser(process.env.CHANNEL_NAME)
-  const myId = me.data[0].id
+  const myId = me.id
+  console.log('myId', myId)
+
+  Service.myId = myId
   
   const webServer = await setupWebServer()
   const websocketServer = await setupWebsocketServer(webServer, myId);
   await setupEventSub(websocketServer, myId)
 }
 
+const parseRequestBody = (req) => new Promise((resolve) => {
+  const bodies = []
+  req.on('data', (chunk) => {
+    bodies.push(chunk)
+  })
+  req.on('end', () => {
+    const body = bodies.join('')
+    if (body) {
+      resolve(JSON.parse(body))
+    } else {
+      resolve({})
+    }
+  })
+})
+
 const setupWebServer = () => new Promise((resolve) => {
-  const server = http.createServer((req, res) => {
+  const server = http.createServer(async (req, res) => {
     const url = decodeURI(req.url === '/' ? '/index.html' : req.url)
-    switch (url) {
+    console.log(url)
+
+    const path = url.includes('?') ? url.substring(0, url.indexOf('?')) : url
+
+    let body = {}
+    if (req.method == 'POST') {
+      body = await parseRequestBody(req)
+    } else if (req.method == 'GET' && url.includes('?')) {
+      body = qs.parse(url.substring(url.indexOf('?') + 1))
+    }
+    console.log('body', JSON.stringify(body))
+
+    switch (path) {
+      case '/echo':
+        if (req.method == 'POST') {
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+          })
+          res.write(JSON.stringify(body))
+          res.end()
+        }
+        break
+      case '/postchat':
+        if (req.method == 'POST') {
+          const result = await Service.postchat(body)
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+          })
+          res.write(JSON.stringify(result))
+          res.end()
+        }
+        break
+      case '/getchatters':
+        if (req.method == 'GET') {
+          const result = await Service.getchatters()
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+          })
+          res.write(JSON.stringify(result))
+          res.end()
+        }
+        break
+      case '/createclip':
+        if (req.method == 'POST') {
+          const result = await Service.createclip()
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+          })
+          res.write(JSON.stringify(result))
+          res.end()
+        }
+        break
+      case '/getclips':
+        if (req.method == 'GET') {
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+          })
+          const user = await getUser(body.login)
+          let id = null
+          if (user) {
+            id = user.id
+          } else {
+            const chatters = await Service.getchatters()
+            const matches = chatters.data.find(_ => _.user_name == body.login)
+            if (matches) {
+              id = matches.user_id
+            }
+          }
+          if (id) {
+            const result = await Service.getclips({ broadcaster_id: id , is_featured: false })
+            res.write(JSON.stringify(result))
+          }
+          res.end()
+        }
+        break
+      case '/getfiles':
+        if (req.method == 'GET') {
+          const result = Service.getfiles({ dir: body.dir })
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+          })
+          res.write(JSON.stringify(result))
+          res.end()
+        }
+        break
       default:
         fs.readFile('./web' + url, (err, data) => {
           if (err) {
@@ -69,10 +172,6 @@ const setupWebsocketServer = (webServer, myId) => new Promise((resolve) => {
     console.log('[INFO] accepted')
     conn.on('message', async (message) => {
       console.log('conn on message', message)
-      const json = JSON.parse(message.utf8Data)
-      if (json.command) {
-        await Command.process(json.command, json.data)
-      }
     })
     conn.on('close', () => {
       const idx = websocketServer.connections.indexOf(conn)
@@ -161,35 +260,35 @@ const setupEventSub = (websocketServer, myId) => new Promise((resolve) => {
           const user = await getUser(event.chatter_user_login)
           websocketServer.broadcast({
             topic: 'chat',
-            message: { event, user: user.data[0] },
+            message: { event, user: user },
           })
         } else if (msg.payload.subscription.type == 'channel.follow') { // フォロー
           const event = msg.payload.event
           const user = await getUser(event.user_login)
           websocketServer.broadcast({
             topic: 'follow',
-            message: { event, user: user.data[0] },
+            message: { event, user: user },
           })
         } else if (msg.payload.subscription.type == 'channel.subscribe') { // サブスク
           const event = msg.payload.event
           const user = await getUser(event.user_login)
           websocketServer.broadcast({
             topic: 'subscribe',
-            message: { event, user: user.data[0] },
+            message: { event, user: user },
           })
         } else if (msg.payload.subscription.type == 'channel.bits.use') { // ビッツ
           const event = msg.payload.event
           const user = await getUser(event.user_login)
           websocketServer.broadcast({
             topic: 'bits',
-            message: { event, user: user.data[0] },
+            message: { event, user: user },
           })
         } else if (msg.payload.subscription.type == 'channel.channel_points_custom_reward_redemption.add') { // チャネポ
           const event = msg.payload.event
           const user = await getUser(event.user_login)
           websocketServer.broadcast({
             topic: 'channel-points',
-            message: { event, user: user.data[0] },
+            message: { event, user: user },
           })
         } else if (msg.payload.subscription.type == 'channel.chat.notification') { // 通知
           const event = msg.payload.event
@@ -197,7 +296,7 @@ const setupEventSub = (websocketServer, myId) => new Promise((resolve) => {
             const user = await getUser(event.raid.user_login)
             websocketServer.broadcast({
               topic: 'raid',
-              message: { event, user: user.data[0] },
+              message: { event, user: user },
             })
           }
         }

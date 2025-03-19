@@ -45,16 +45,18 @@ const auth = () => {
   ]
   const scopes = [
     'bits:read',
-    'channel:read:subscriptions',
-    'channel:read:redemptions',
-    'chat:read',
-    'chat:edit',
-    'user:manage:whispers',
-    'user:write:chat',
-    'user:read:chat',
-    'user:bot',
     'channel:bot',
+    'channel:read:redemptions',
+    'channel:read:subscriptions',
+    'chat:edit',
+    'chat:read',
+    'clips:edit',
+    'moderator:read:chatters',
     'moderator:read:followers',
+    'user:bot',
+    'user:manage:whispers',
+    'user:read:chat',
+    'user:write:chat',
   ]
   const url = us.join('') + "&scope=" + scopes.map(encodeURIComponent).join("+")
   location.href = url
