@@ -124,7 +124,7 @@ export default {
           break
         }
         case 'short キスキツネ': {
-          effect.playShort('./resources/ss_キスキツネ.mov')
+          effect.playShort('./resources/ss キスキツネ.mov')
           break
         }
         case '「萌え萌えキュンキュン」': {
