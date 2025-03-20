@@ -19,6 +19,13 @@ const setup = async () => {
   const webServer = await setupWebServer()
   const websocketServer = await setupWebsocketServer(webServer, myId);
   await setupEventSub(websocketServer, myId)
+
+  setInterval(async () => {
+    const chatters = await Service.getchatters()
+    console.log('\n###\n')
+    chatters.data.map(_ => `${_.user_name} (${_.user_login})`).map(_ => console.log(_))
+    console.log('\n###\n')
+  }, 30 * 1000)
 }
 
 const parseRequestBody = (req) => new Promise((resolve) => {

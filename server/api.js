@@ -9,7 +9,7 @@ const get = async (url) => {
     }
   })
   const json = await res.json()
-  // console.log(json)
+  console.log(json)
   if (json.error) {
     throw new Error(e.error)
   }
@@ -28,7 +28,7 @@ const post = async (url, params) => {
     body: params,
   })
   const json = await res.json()
-  // console.log(json)
+  console.log(json)
   if (json.error) {
     throw new Error(e.error)
   }

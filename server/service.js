@@ -13,7 +13,7 @@ const Service = {
         sender_id: this.myId,
         message: text,
       }))
-      return await res.json()
+      return await res
     } catch (e) {
       return { error: e.message }
     }
@@ -26,7 +26,7 @@ const Service = {
         `?broadcaster_id=${this.myId}` +
         `&moderator_id=${this.myId}`
       )
-      return await res.json()
+      return await res
     } catch (e) {
       return { error: e.message }
     }
@@ -37,7 +37,7 @@ const Service = {
       const res = await api.post(`https://api.twitch.tv/helix/clips`, JSON.stringify({
         broadcaster_id: this.myId,
       }))
-      return await res.json()
+      return await res
     } catch (e) {
       return { error: e.message }
     }
