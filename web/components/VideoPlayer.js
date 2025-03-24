@@ -45,6 +45,7 @@ export const VideoPlayer = {
           v.width = width || 1280
           v.height = height || 720
           v.style.transform = transform || ''
+          v.volume = volume || 1.0
           this.playing = true
 
           const _onplay = () => {

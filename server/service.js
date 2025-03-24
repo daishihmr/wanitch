@@ -72,6 +72,14 @@ const Service = {
     const files = fs.readdirSync(path.join('./web', dir))
     return { data: files }
   },
+
+  async shoutout ({ to_broadcaster_id }) {
+    await api.post('https://api.twitch.tv/helix/chat/shoutouts', {
+      from_broadcaster_id: this.myId,
+      to_broadcaster_id,
+      moderator_id: this.myId,
+    })
+  },
 }  
 
 module.exports = Service

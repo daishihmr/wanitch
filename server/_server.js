@@ -25,7 +25,7 @@ const setup = async () => {
     console.log('\n###\n')
     chatters.data.map(_ => `${_.user_name} (${_.user_login})`).map(_ => console.log(_))
     console.log('\n###\n')
-  }, 30 * 1000)
+  }, 10 * 1000)
 }
 
 const parseRequestBody = (req) => new Promise((resolve) => {
@@ -128,6 +128,18 @@ const setupWebServer = () => new Promise((resolve) => {
             'Content-Type': 'application/json',
           })
           res.write(JSON.stringify(result))
+          res.end()
+        }
+        break
+      case '/shoutout':
+        if (req.method == 'POST') {
+          await Service.shoutout({
+            to_broadcaster_id: body.to_broadcaster_id,
+          })
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+          })
+          res.write(JSON.stringify({}))
           res.end()
         }
         break

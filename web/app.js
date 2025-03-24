@@ -182,13 +182,15 @@ export default {
     })
     wslocal.on('subscribe', ({ event, user }) => {
       console.log(event, user)
+      effect.playSound('./resources/Far Away (Sting) - MK2.mp3', 0.2)
     })
     wslocal.on('bits', ({ event, user }) => {
       console.log(event, user)
-      effect.playSound('./resources/levelup.mp3')
+      effect.playSound('./resources/スタジアムの歓声1.mp3', 0.2)
     })
     wslocal.on('raid', ({ event, user }) => {
       console.log(event, user)
+      effect.playSound('./resources/levelup.mp3', 0.2)
     })
   },
   template: `

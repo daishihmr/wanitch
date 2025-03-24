@@ -46,7 +46,7 @@ export default {
         y: 100,
         width: 720 * 0.6,
         height: 1280 * 0.6,
-        volume: 0.3,
+        volume: 0.2,
       })
     }
   },
@@ -66,7 +66,7 @@ export default {
       y: 100,
       width: 720 * 0.6,
       height: 1280 * 0.6,
-      volume: 0.3,
+      volume: 0.2,
     })
   },
   playSmallVideo (video) {
@@ -77,7 +77,7 @@ export default {
       y: 200,
       width: 1280 * 0.6,
       height: 720 * 0.6,
-      volume: 0.3,
+      volume: 0.2,
     })
   },
   playFullscreenVideo (video, sound) {
@@ -100,15 +100,16 @@ export default {
       y: 200,
       width: 1280 * 0.6,
       height: 720 * 0.6,
-      volume: 0.3,
+      volume: 0.2,
     })
   },
   playVideo (params) {
     this.videoPlayer.enqueue(params)
   },
-  playSound (sound) {
+  playSound (sound, volume = 0.3) {
     this.videoPlayer.enqueue({
       sound,
+      volume,
     })
   },
   wani () {
