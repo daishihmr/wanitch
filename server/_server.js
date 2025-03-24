@@ -9,6 +9,8 @@ const api = require('./api')
 const Service = require('./service')
 const { getUser } = require('./getUser')
 
+const chatters = []
+
 const setup = async () => {
   const me = await getUser(process.env.CHANNEL_NAME)
   const myId = me.id
@@ -21,9 +23,11 @@ const setup = async () => {
   await setupEventSub(websocketServer, myId)
 
   setInterval(async () => {
-    const chatters = await Service.getchatters()
+    const _chatters = await Service.getchatters()
     console.log('\n###\n')
-    chatters.data.map(_ => `${_.user_name} (${_.user_login})`).map(_ => console.log(_))
+    const c = _chatters.data.map(_ => `${_.user_name} (${_.user_login})`)
+    chatters.push(c.filter(_ => !chatters.includes(c)))
+    chatters.forEach(console.log)
     console.log('\n###\n')
   }, 10 * 1000)
 }
