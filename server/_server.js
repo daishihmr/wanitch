@@ -26,7 +26,7 @@ const setup = async () => {
     const _chatters = await Service.getchatters()
     console.log('\n###\n')
     const c = _chatters.data.map(_ => `${_.user_name} (${_.user_login})`)
-    chatters.push(c.filter(_ => !chatters.includes(c)))
+    chatters.push(...c.filter(_ => !chatters.includes(c)))
     chatters.forEach(console.log)
     console.log('\n###\n')
   }, 10 * 1000)

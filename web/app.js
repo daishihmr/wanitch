@@ -83,7 +83,7 @@ export default {
         }
       } else {
         if (!text.startsWith('-')) {
-          if (user.login != 'daishihmr' && user.login != 'daishihmr_bot') {
+          if (user.login != 'daishihmr_bot') {
             effect.showComment(event)
           }
 
