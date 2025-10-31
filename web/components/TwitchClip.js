@@ -18,7 +18,7 @@ export const TwitchClip = {
       }
 
       this.playing = true
-      this.src = `${clip.embed_url}&parent=localhost&autoplay=true&muted=false`
+      this.src = `${clip.embed_url}&parent=localhost&autoplay=true`
 
       return new Promise((resolve) => {
         setTimeout(() => {

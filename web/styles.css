@@ -16,13 +16,13 @@ body {
 .twitch-clip {
   position: relative;
   background-color: black;
-  width: 800px;
-  height: 450px;
+  width: 1280px;
+  height: 768px;
   padding: 0;
   border: none;
-  left: calc(100% - 800px - 80px);
-  top: calc(50% - 450px / 2);
-  transform: perspective(800px) rotateY(-20deg);
+  left: calc(100% - 1280px - 80px);
+  top: calc(50% - 768px / 2);
+  /* transform: perspective(800px) rotateY(-20deg); */
 }
 
 .comment {
