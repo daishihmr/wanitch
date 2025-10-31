@@ -43,12 +43,11 @@ const Service = {
     }
   },
 
-  async getclips ({ broadcaster_id, is_featured }) {
+  async getclips ({ broadcaster_id }) {
     const data = []
     const nextPage = async (after) => {
       const res = await api.get(`https://api.twitch.tv/helix/clips` +
         `?broadcaster_id=${broadcaster_id}` +
-        `&is_featured=${is_featured}` +
         (after ? `&after=${after}` : '')
       )
 

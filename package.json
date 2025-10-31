@@ -14,6 +14,20 @@
     "fast-querystring": "^1.1.2",
     "mime-types": "^2.1.35",
     "node-fetch": "^2.7.0",
+    "openai": "^5.23.0",
     "websocket": "^1.0.35"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daishihmr/wanitch.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/daishihmr/wanitch/issues"
+  },
+  "homepage": "https://github.com/daishihmr/wanitch#readme"
 }
