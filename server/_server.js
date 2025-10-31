@@ -118,7 +118,7 @@ const setupWebServer = () => new Promise((resolve) => {
             }
           }
           if (id) {
-            const result = await Service.getclips({ broadcaster_id: id , is_featured: false })
+            const result = await Service.getclips({ broadcaster_id: id })
             res.write(JSON.stringify(result))
           }
           res.end()
