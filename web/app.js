@@ -131,7 +131,7 @@ export default {
           break
         }
         case '「伝説になるのだ」': {
-          effect.playSound('./resources/伝説になるのだ.mp3')
+          effect.playSound('./resources/伝説になるのだ.mp3', 0.7)
           break
         }
         case '「信じて！」': {
