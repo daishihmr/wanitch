@@ -13,16 +13,33 @@ body {
   /* background-color: #999; */
 }
 
-.twitch-clip {
+.twitch-clip-container {
   position: relative;
-  background-color: black;
-  width: 1280px;
-  height: 768px;
+  width: 1080px;
   padding: 0;
   border: none;
-  left: calc(100% - 1280px - 80px);
-  top: calc(50% - 768px / 2);
+  left: calc(100% - 1080px - 80px);
+  top: calc(50% - 607px / 2);
   /* transform: perspective(800px) rotateY(-20deg); */
+}
+.twitch-clip-title {
+  width: 100%;
+  text-align: center;
+  color: white;
+  -webkit-text-stroke: 2px black;
+  text-stroke: 2px black;
+  font-size: 60px;
+  font-weight: 800;
+  margin: 0;
+}
+.twitch-clip-title span {
+  font-size: 40px;
+  font-weight: 400;
+}
+.twitch-clip {
+  background-color: black;
+  width: 1080px;
+  height: 607px;
 }
 
 .comment {
