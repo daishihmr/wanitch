@@ -4,6 +4,7 @@ export const TwitchClip = {
   data: () => ({
     playing: false,
     src: null,
+    clip: null,
   }),
   methods: {
     async start (login) {
@@ -17,8 +18,10 @@ export const TwitchClip = {
         clip = res.data[Math.floor(Math.random() * res.data.length)]
       }
 
+      console.log('clip', clip)
       this.playing = true
       this.src = `${clip.embed_url}&parent=localhost&autoplay=true`
+      this.clip = clip
 
       return new Promise((resolve) => {
         setTimeout(() => {
@@ -30,6 +33,9 @@ export const TwitchClip = {
     },
   },
   template: `
-  <iframe v-if="playing" class="twitch-clip" :src="src" />
+  <div v-if="playing" class="twitch-clip-container">
+    <h3 class="twitch-clip-title">{{ clip.title }}<span> clipped by {{ clip.creator_name }}</span></h3>
+    <iframe class="twitch-clip" :src="src" />
+  </div>
   `
 }
