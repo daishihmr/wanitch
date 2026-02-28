@@ -38,10 +38,10 @@ export default {
             effect.trustme()
             break
           }
-          case '!short': {
-            effect.short()
-            break
-          }
+          // case '!short': {
+          //   effect.short()
+          //   break
+          // }
           case '!okaeri': {
             effect.okaeri()
             break
@@ -50,20 +50,20 @@ export default {
             effect.wani()
             break
           }
-          case '!dame': {
-            effect.dame()
-            break
-          }
+          // case '!dame': {
+          //   effect.dame()
+          //   break
+          // }
           case '!so': {
             if (args[1] && isAdmin) {
               effect.playClip(args[1])
             }
             break
           }
-          case '!shoot': {
-            effect.playSmallVideo('./resources/minigun.mp4')
-            break
-          }
+          // case '!shoot': {
+          //   effect.playSmallVideo('./resources/minigun.mp4')
+          //   break
+          // }
           case '!asu': {
             effect.playFullscreenVideo('./resources/dance_1.webm', './resources/asu.mp3')
             break
@@ -77,7 +77,7 @@ export default {
             break
           }
           case '!hero': {
-            effect.playSound('./resources/伝説になるのだ.mp3')
+            effect.playSound('./resources/伝説になるのだ.mp3', 1.0)
             break
           }
         }
@@ -92,7 +92,8 @@ export default {
       }
     })
     wslocal.on('channel-points', ({ event, user }) => {
-      console.log(event, user)
+      // console.log(event)
+      console.log('user', user)
       switch (event.reward.title) {
         case 'おかえり': {
           effect.okaeri()
@@ -178,6 +179,10 @@ export default {
           service.postchat('daishi7Heartl daishi7Heartr')
           break
         }
+        case '初見です': {
+          service.askAI(`Twitchユーザー ${user.display_name} (id: ${user.login}) を200文字程度で簡単に紹介してください`)
+          break
+        }
       }
     })
     wslocal.on('subscribe', ({ event, user }) => {
@@ -192,6 +197,8 @@ export default {
       console.log(event, user)
       effect.playSound('./resources/levelup.mp3', 0.2)
     })
+
+    service.postchat('wanitch起動しました')
   },
   template: `
   <div class="app">

@@ -10,11 +10,16 @@ const Service = require('./service')
 const { getUser } = require('./getUser')
 
 const chatters = []
+const logfile = (new Date()).toLocaleString().split('/').join('-').split(':').join('-').split(' ').join('-') + '.log'
+const log = (...args) => {
+  console.log(...args)
+  fs.appendFileSync('./logs/' + logfile, args.join('\n') + '\n')
+}
 
 const setup = async () => {
   const me = await getUser(process.env.CHANNEL_NAME)
   const myId = me.id
-  console.log('myId', myId)
+  log('myId', myId)
 
   Service.myId = myId
   
@@ -24,10 +29,10 @@ const setup = async () => {
 
   setInterval(async () => {
     const _chatters = await Service.getchatters()
-    console.log('\n###\n')
+    log(`\n### ${new Date().toLocaleString()}\n`)
     const c = _chatters.data.map(_ => _.user_name)
-    c.forEach(_ => console.log(_))
-    console.log('\n###\n')
+    c.forEach(_ => log(_))
+    log('\n')
   }, 10 * 1000)
 }
 
@@ -49,7 +54,7 @@ const parseRequestBody = (req) => new Promise((resolve) => {
 const setupWebServer = () => new Promise((resolve) => {
   const server = http.createServer(async (req, res) => {
     const url = decodeURI(req.url === '/' ? '/index.html' : req.url)
-    console.log(url)
+    log(url)
 
     const path = url.includes('?') ? url.substring(0, url.indexOf('?')) : url
 
@@ -59,7 +64,7 @@ const setupWebServer = () => new Promise((resolve) => {
     } else if (req.method == 'GET' && url.includes('?')) {
       body = qs.parse(url.substring(url.indexOf('?') + 1))
     }
-    console.log('body', JSON.stringify(body))
+    log('body', JSON.stringify(body))
 
     switch (path) {
       case '/echo':
@@ -146,6 +151,16 @@ const setupWebServer = () => new Promise((resolve) => {
           res.end()
         }
         break
+      case '/askai':
+        if (req.method == 'GET') {
+          const answer = await Service.askai({ question: body.question })
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+          })
+          res.write(JSON.stringify({ answer }))
+          res.end()
+        }
+        break
       default:
         fs.readFile('./web' + url, (err, data) => {
           if (err) {
@@ -161,8 +176,8 @@ const setupWebServer = () => new Promise((resolve) => {
     }
   })
   server.listen((process.env.PORT || '3000'), () => {
-    console.log('[INFO] listen ' + (process.env.PORT || '3000'))
-    console.log('[INFO] open http://localhost:' + (process.env.PORT || '3000'))
+    log('[INFO] listen ' + (process.env.PORT || '3000'))
+    log('[INFO] open http://localhost:' + (process.env.PORT || '3000'))
     resolve(server)
   })
 })
@@ -191,14 +206,14 @@ const setupWebsocketServer = (webServer, myId) => new Promise((resolve) => {
   wsServer.on('request', (req) => {
     const conn = req.accept('ws-local', req.origin)
     websocketServer.connections.push(conn)
-    console.log('[INFO] accepted')
+    log('[INFO] accepted')
     conn.on('message', async (message) => {
-      console.log('conn on message', message)
+      log('conn on message', message)
     })
     conn.on('close', () => {
       const idx = websocketServer.connections.indexOf(conn)
       websocketServer.connections.splice(idx, 1)
-      console.log('[INFO] closed')
+      log('[INFO] closed')
     })
   })
 
@@ -208,11 +223,11 @@ const setupWebsocketServer = (webServer, myId) => new Promise((resolve) => {
 const setupEventSub = (websocketServer, myId) => new Promise((resolve) => {
   const ws = new WebSocket()
   ws.on('connect', (connection) => {
-    console.log('[INFO] EventSub connected')
+    log('[INFO] EventSub connected')
     connection.on('message', async (e) => {
       const msg = JSON.parse(e.utf8Data)
       if (msg.metadata.message_type != 'session_keepalive') {
-        console.log('[INFO] EventSub message', msg)
+        log('[INFO] EventSub message', msg)
       }
 
       if (msg.metadata.message_type == 'session_welcome') {
@@ -226,7 +241,7 @@ const setupEventSub = (websocketServer, myId) => new Promise((resolve) => {
           session_id: msg.payload.session.id,
         }
       
-        console.log('[INFO] EventSub request read chat')
+        log('[INFO] EventSub request read chat')
         await api.post('https://api.twitch.tv/helix/eventsub/subscriptions', JSON.stringify({
           type: 'channel.chat.message',
           version: '1',
@@ -234,7 +249,7 @@ const setupEventSub = (websocketServer, myId) => new Promise((resolve) => {
           transport,
         }))
 
-        console.log('[INFO] EventSub request follow')
+        log('[INFO] EventSub request follow')
         await api.post('https://api.twitch.tv/helix/eventsub/subscriptions', JSON.stringify({
           type: 'channel.follow',
           version: '2',
@@ -242,7 +257,7 @@ const setupEventSub = (websocketServer, myId) => new Promise((resolve) => {
           transport,
         }))
 
-        console.log('[INFO] EventSub request subscribe')
+        log('[INFO] EventSub request subscribe')
         await api.post('https://api.twitch.tv/helix/eventsub/subscriptions', JSON.stringify({
           type: 'channel.subscribe',
           version: '1',
@@ -250,7 +265,7 @@ const setupEventSub = (websocketServer, myId) => new Promise((resolve) => {
           transport,
         }))
 
-        console.log('[INFO] EventSub request bits use')
+        log('[INFO] EventSub request bits use')
         await api.post('https://api.twitch.tv/helix/eventsub/subscriptions', JSON.stringify({
           type: 'channel.bits.use',
           version: '1',
@@ -258,7 +273,7 @@ const setupEventSub = (websocketServer, myId) => new Promise((resolve) => {
           transport,
         }))
 
-        console.log('[INFO] EventSub request channel points')
+        log('[INFO] EventSub request channel points')
         await api.post('https://api.twitch.tv/helix/eventsub/subscriptions', JSON.stringify({
           type: 'channel.channel_points_custom_reward_redemption.add',
           version: '1',
@@ -266,7 +281,7 @@ const setupEventSub = (websocketServer, myId) => new Promise((resolve) => {
           transport,
         }))
 
-        console.log('[INFO] EventSub request raid')
+        log('[INFO] EventSub request raid')
         await api.post('https://api.twitch.tv/helix/eventsub/subscriptions', JSON.stringify({
           type: 'channel.chat.notification',
           version: '1',

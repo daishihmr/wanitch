@@ -62,6 +62,7 @@ export const Comments = {
   }),
   methods: {
     addMessage (event) {
+      console.log('addMessage', event)
       this.events.push(event)
     },
     onended (event) {

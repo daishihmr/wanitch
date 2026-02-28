@@ -2,6 +2,11 @@ const api = require('./api')
 const fs = require('fs')
 const path = require('path')
 const { getUser } = require('./getUser')
+const OpenAI = require("openai")
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+})
 
 const Service = {
   myId: null,
@@ -79,6 +84,20 @@ const Service = {
       moderator_id: this.myId,
     })
   },
-}  
+
+  async askai ({ question }) {
+    try {
+      const result = await openai.responses.create({
+        model: "gpt-5-nano",
+        input: question,
+        store: true,
+      })
+      console.log('result', result)
+      return result.output_text
+    } catch (e) {
+      return ''
+    }
+  },
+}
 
 module.exports = Service

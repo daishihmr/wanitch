@@ -30,4 +30,10 @@ export default {
     const res = await fetch(`/getfiles?dir=${encodeURIComponent(dir)}`)
     return await res.json()
   },
+
+  async askAI (question) {
+    const res = await fetch(`/askai?question=${question}`)
+    const { answer } = await res.json()
+    this.postchat(answer)
+  },
 }

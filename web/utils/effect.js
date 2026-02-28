@@ -15,10 +15,10 @@ export default {
       '!hero',
       '!asu',
       '!nani',
-      '!dame',
+      // '!dame',
       '!okaeri',
-      '!shoot',
-      '!short',
+      // '!shoot',
+      // '!short',
       '!kurukuru',
     ].join(', '))
   },
@@ -126,7 +126,7 @@ export default {
     es.forEach(e => this.emotes.add(e))
   },
   showComment (event) {
-    this.playSound('./resources/pixta_65456670.mp3')
+    this.playSound('./resources/pixta_65456670.mp3', 1.0)
     this.comments.addMessage(event)
   },
 }

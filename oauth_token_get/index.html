@@ -40,7 +40,7 @@ const auth = () => {
     `https://id.twitch.tv/oauth2/authorize`,
     `?response_type=token`,
     `&client_id=${client_id}`,
-    `&redirect_uri=https://game.dev7.jp/wanitch/callback.html`,
+    `&redirect_uri=http://localhost:5500/oauth_token_get/callback.html`,
     `&state=wanitch`,
   ]
   const scopes = [
